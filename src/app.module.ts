@@ -11,6 +11,8 @@ const appModules = [
   UsersModule,
   AuthModule
 ]
+const config = configuration();
+console.log('config', config.database);
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -18,7 +20,17 @@ const appModules = [
       load: [configuration],
       isGlobal: true,
     }),
-    ...appModules,
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: config.database.host,
+      port: config.database.port,
+      username: config.database.username,
+      password: config.database.password,
+      database: config.database.name,
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      synchronize: false,
+    }),
+ ...appModules,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -9,7 +9,7 @@ export default () => ({
     host: get('DATABASE_HOST').asString() || 'localhost',
     username: get('DATABASE_USERNAME').asString(),
     password: get('DATABASE_PASSWORD').asString(),
-    database: get('DATABASE_NAME').asString(),
+    name: get('DATABASE_NAME').asString(),
     port: get('DATABASE_PORT').asInt() || 3306,
   },
   jwt:{

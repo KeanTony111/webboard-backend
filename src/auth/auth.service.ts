@@ -12,7 +12,6 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-
   async signUp(username: string): Promise<any> {
     // Validate username
     if (!username || username.length < 3) {
@@ -50,7 +49,7 @@ export class AuthService {
 
     //Generate JWT
     const payload = { sub: user.id, username: user.username };
-    const jwt = await this.jwtService.signAsync(payload,);
+    const jwt = await this.jwtService.signAsync(payload);
 
     return {
         access_token: jwt
