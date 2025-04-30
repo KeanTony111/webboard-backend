@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { JwtService } from '@nestjs/jwt';
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -10,6 +11,7 @@ export class AuthService {
     private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
   ) {}
+
 
   async signUp(username: string): Promise<any> {
     // Validate username
@@ -48,7 +50,7 @@ export class AuthService {
 
     //Generate JWT
     const payload = { sub: user.id, username: user.username };
-    const jwt = await this.jwtService.signAsync(payload);
+    const jwt = await this.jwtService.signAsync(payload,);
 
     return {
         access_token: jwt
