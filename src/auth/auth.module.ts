@@ -10,6 +10,7 @@ import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
+    PassportModule.register({ defaultStrategy: 'jwt' }),
     TypeOrmModule.forFeature([User]),
     JwtModule.register({
       secret: jwtConstants.secret,
@@ -17,6 +18,7 @@ import { PassportModule } from '@nestjs/passport';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService]
+  providers: [AuthService,JwtStrategy],
+  exports: [AuthService, JwtStrategy,PassportModule], // Export AuthService and JwtModule for use in other modules
 })
 export class AuthModule {}
