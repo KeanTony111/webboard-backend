@@ -11,5 +11,5 @@ export const ormconfig: TypeOrmModuleOptions = {
 	database: config.database.name,
   entities: [__dirname + '/../**/*.entity{.ts,.js}'], 
   logging: true,
-	synchronize: true,
+	synchronize: true, // Set to false in production
 };
