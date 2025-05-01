@@ -7,10 +7,12 @@ import { AuthModule } from './auth/auth.module';
 import configuration from './config/configuration';
 import { ormconfig } from './config/ormconfig';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CommunitiesModule } from './communities/communities.module';
 
 const appModules = [
   UsersModule,
-  AuthModule
+  AuthModule,
+  CommunitiesModule
 ]
 const config = configuration();
 
