@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import configuration from './config/configuration';
+import { ormconfig } from './config/ormconfig';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 const appModules = [
@@ -12,7 +13,7 @@ const appModules = [
   AuthModule
 ]
 const config = configuration();
-console.log('config', config.database);
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -20,17 +21,8 @@ console.log('config', config.database);
       load: [configuration],
       isGlobal: true,
     }),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: config.database.host,
-      port: config.database.port,
-      username: config.database.username,
-      password: config.database.password,
-      database: config.database.name,
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: false,
-    }),
- ...appModules,
+    TypeOrmModule.forRoot(ormconfig),
+    ...appModules,
   ],
   controllers: [AppController],
   providers: [AppService],
