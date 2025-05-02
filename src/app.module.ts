@@ -10,12 +10,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommunitiesModule } from './communities/communities.module';
 import { PostsModule } from './posts/posts.module';
 import { CommentsModule } from './comments/comments.module';
+import { SearchModule } from './search/search.module';
 
 const appModules = [
   UsersModule,
   AuthModule,
   CommunitiesModule,
-  PostsModule
+  PostsModule,
+  CommentsModule,
+  SearchModule
 ]
 const config = configuration();
 
@@ -28,8 +31,6 @@ const config = configuration();
     }),
     TypeOrmModule.forRoot(ormconfig),
     ...appModules,
-    CommentsModule,
-
   ],
   controllers: [AppController],
   providers: [AppService],
