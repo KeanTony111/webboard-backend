@@ -25,8 +25,9 @@ export class PostsController {
   async getAllPosts(
     @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
     @Query('limit', new ParseIntPipe({ optional: true })) limit: number = 10,
+    @Query('order') order: string = 'DESC',
   ): Promise<{ posts: PostEntity[]; total: number }> {
-    return this.postsService.getAllPosts(page, limit);
+    return this.postsService.getAllPosts(page, limit, order);
   }
 
 	@Get(':id')
