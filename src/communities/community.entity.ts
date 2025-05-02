@@ -1,4 +1,3 @@
-// communities/community.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column, Timestamp } from 'typeorm';
 
 @Entity('communities')

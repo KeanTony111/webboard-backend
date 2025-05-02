@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, ParseIntPipe, NotFoundException, HttpStatus } from '@nestjs/common';
 import { CommunitiesService } from './communities.service';
-import { Community } from './communities.entity';
+import { Community } from './community.entity';
 
 @Controller('communities')
 export class CommunitiesController {

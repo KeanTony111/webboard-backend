@@ -8,11 +8,13 @@ import configuration from './config/configuration';
 import { ormconfig } from './config/ormconfig';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommunitiesModule } from './communities/communities.module';
+import { PostsModule } from './posts/posts.module';
 
 const appModules = [
   UsersModule,
   AuthModule,
-  CommunitiesModule
+  CommunitiesModule,
+  PostsModule
 ]
 const config = configuration();
 
@@ -25,6 +27,7 @@ const config = configuration();
     }),
     TypeOrmModule.forRoot(ormconfig),
     ...appModules,
+
   ],
   controllers: [AppController],
   providers: [AppService],
