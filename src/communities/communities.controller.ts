@@ -1,6 +1,8 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, ParseIntPipe, NotFoundException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, ParseIntPipe, NotFoundException, HttpStatus,UsePipes, ValidationPipe  } from '@nestjs/common';
 import { CommunitiesService } from './communities.service';
 import { Community } from './community.entity';
+import { CreateCommunityDto } from './dto/create-community.dto'; 
+import { UpdateCommunityDto } from './dto/update-community.dto';  
 
 @Controller('communities')
 export class CommunitiesController {
@@ -24,21 +26,20 @@ export class CommunitiesController {
   }
 
 	@Post()
-  async createCommunity(
-    @Body('name') name: string,
-    @Body('description') description?: string,
-  ): Promise<Community> {
-    return this.communitiesService.createCommunity(name, description);
+  @UsePipes(new ValidationPipe())
+  async createCommunity(@Body() createCommunityDto: CreateCommunityDto): Promise<Community> {
+    return this.communitiesService.createCommunity(createCommunityDto.name, createCommunityDto.description);
   }
 
 	@Put(':id')
+	@UsePipes(new ValidationPipe())
   async updateCommunity(
     @Param('id', ParseIntPipe) id: number,
-    @Body('name') name?: string,
-    @Body('description') description?: string,
+    @Body() updateCommunityDto: UpdateCommunityDto, 
   ): Promise<Community> {
     try {
-      return await this.communitiesService.updateCommunity(id, name, description);
+      return await this.communitiesService.updateCommunity(id, updateCommunityDto.name, updateCommunityDto.description);
+			
     } catch (e) {
       if (e instanceof NotFoundException) {
         throw e; 
