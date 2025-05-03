@@ -7,9 +7,12 @@ import {
   ParseIntPipe,
   Request,
   NotFoundException,
+	UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { Comment } from './comment.entity';
+import { CreateCommentDto } from './dto/create-comment.dto'; 
 
 @Controller('comments')
 export class CommentsController {
@@ -27,14 +30,16 @@ export class CommentsController {
     }
   }
 
-	@Post() 
+	@Post() // POST /comments
+  @UsePipes(new ValidationPipe()) 
   async createComment(
-    @Body('commentDetail') commentDetail: string,
-    @Body('postId', ParseIntPipe) postId: number,
-    @Body('userId', ParseIntPipe) userId: number,
+     @Body() createCommentDto: CreateCommentDto, 
   ): Promise<Comment> {
-    console.log('userId', userId);
-    return this.commentsService.createComment(commentDetail, postId, userId);
+     return this.commentsService.createComment(
+      createCommentDto.commentDetail,
+      createCommentDto.postId,
+      createCommentDto.userId,
+    );
   }
 
 }
