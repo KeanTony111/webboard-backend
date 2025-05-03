@@ -1,8 +1,7 @@
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository,Like, FindManyOptions } from 'typeorm';
 import { Post } from './post.entity';
-import { User } from '../auth/user.entity'; 
 
 @Injectable()
 export class PostsService {
@@ -67,5 +66,37 @@ export class PostsService {
      }
 
      await this.postRepository.remove(post);
+  }
+	
+	async searchPosts(
+    searchTerm: string | undefined,
+    communityId: number | undefined,
+    userId: number | undefined,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<{ posts: Post[]; total: number }> {
+		const where: any = {};
+
+		if (searchTerm && searchTerm.length >= 2) {
+			where.title = Like(`%${searchTerm}%`);
+		}
+		if (communityId) {
+			where.communityId = communityId;
+		}
+		if (userId) {
+			where.userId = userId;
+		}
+
+		const options: FindManyOptions<Post> = {
+			relations: ['user', 'community'],
+			skip: (page - 1) * limit,
+			take: limit,
+			order: { createdAt: 'DESC' },
+			where,
+		};
+
+		const [posts, total] = await this.postRepository.findAndCount(options);
+		
+    return { posts, total };
   }
 }

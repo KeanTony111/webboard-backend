@@ -12,10 +12,13 @@ import {
   UnauthorizedException,
   UseGuards,
   Request,
+	UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { Post as PostEntity } from './post.entity';
 import { JwtAuthGuard } from '../auth/jwt.guard'; 
+import { CreatePostDto } from './dto/create-post.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -44,14 +47,21 @@ export class PostsController {
 
 	@UseGuards(JwtAuthGuard)
   @Post()
+	@UsePipes(new ValidationPipe())
   async createPost(
     @Body('title') title: string,
     @Body('detail') detail: string,
     @Body('communityId', ParseIntPipe) communityId: number,
+		@Body() createPostDto: CreatePostDto,
     @Request() req, // Assuming you have a JWT token in the request
   ): Promise<PostEntity> {
     const userId = req.user.userId; // Assuming the JWT payload has userId
-    return this.postsService.createPost(title, detail, userId, communityId);
+    return this.postsService.createPost(
+      createPostDto.title,
+      createPostDto.detail,
+      userId,
+      createPostDto.communityId,
+    );
   }
 
 	@UseGuards(JwtAuthGuard) 
@@ -93,5 +103,4 @@ export class PostsController {
 			throw e;
     }
   }
-	
 }
