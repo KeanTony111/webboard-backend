@@ -9,8 +9,4 @@ export class CreateCommentDto {
   @IsInt()
   @IsNotEmpty()
   postId: number;
-
-	@IsInt()
-	@IsNotEmpty()
-	userId:number;	
 }

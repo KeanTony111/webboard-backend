@@ -11,15 +11,25 @@ export class PostsService {
   ) {}
 
 	 async getAllPosts(page: number = 1, limit: number = 10 ,order='DESC'): Promise<{ posts: Post[]; total: number }> {
-		const [posts, total] = await this.postRepository.findAndCount({
-			relations: ['user', 'community'],
-			skip: (page - 1) * limit,
-			take: limit,
-			order: { createdAt: order === 'ASC' ? 'ASC' : 'DESC' },
-		});
+   
 
-    return { posts, total };
-  }
+    const [posts, total] = await this.postRepository.findAndCount({
+      relations: ['user', 'community'],
+      skip: (page - 1) * limit,
+      take: limit,
+      order: { createdAt: order === 'ASC' ? 'ASC' : 'DESC' },
+    });
+
+    // Count comments for each post
+    const postsWithCommentCount = await Promise.all(
+      posts.map(async post => {
+      const commentCount = await this.postRepository.manager.count('Comment', { where: { postId: post.id } });
+      return { ...post, commentCount };
+      })
+    );
+
+    return { posts: postsWithCommentCount, total };
+   }
 
 	async getPostById(id: number): Promise<Post> {
     const post = await this.postRepository.findOne({
@@ -95,8 +105,15 @@ export class PostsService {
 			where,
 		};
 
-		const [posts, total] = await this.postRepository.findAndCount(options);
-		
-    return { posts, total };
+    // Count comments for each post
+    const [posts, total] = await this.postRepository.findAndCount(options);
+    const postsWithCommentCount = await Promise.all(
+      posts.map(async post => {
+        const commentCount = await this.postRepository.manager.count('Comment', { where: { postId: post.id } });
+        return { ...post, commentCount };
+      })
+    );
+
+    return { posts: postsWithCommentCount, total };
   }
 }

@@ -47,15 +47,12 @@ export class PostsController {
 
 	@UseGuards(JwtAuthGuard)
   @Post()
-	@UsePipes(new ValidationPipe())
+	@UsePipes(new ValidationPipe({ transform: true })) // Ensure transform is true for potential type conversions
   async createPost(
-    @Body('title') title: string,
-    @Body('detail') detail: string,
-    @Body('communityId', ParseIntPipe) communityId: number,
-		@Body() createPostDto: CreatePostDto,
-    @Request() req, // Assuming you have a JWT token in the request
+    @Body() createPostDto: CreatePostDto, // Only accept the DTO
+    @Request() req, 
   ): Promise<PostEntity> {
-    const userId = req.user.userId; // Assuming the JWT payload has userId
+    const userId = req.user.userId; 
     return this.postsService.createPost(
       createPostDto.title,
       createPostDto.detail,

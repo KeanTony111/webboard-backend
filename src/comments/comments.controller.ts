@@ -7,9 +7,11 @@ import {
   ParseIntPipe,
   Request,
   NotFoundException,
-	UsePipes,
+  UsePipes,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt.guard';
 import { CommentsService } from './comments.service';
 import { Comment } from './comment.entity';
 import { CreateCommentDto } from './dto/create-comment.dto'; 
@@ -30,15 +32,24 @@ export class CommentsController {
     }
   }
 
-	@Post() // POST /comments
-  @UsePipes(new ValidationPipe()) 
+	@Post()
+  @UseGuards(JwtAuthGuard)
+  @UsePipes(new ValidationPipe({ transform: true })) 
   async createComment(
+     @Request() req,
      @Body() createCommentDto: CreateCommentDto, 
   ): Promise<Comment> {
-     return this.commentsService.createComment(
+
+    // Get userId from sub claim in JWT token
+    if (!req.user || !req.user.sub) {
+      throw new Error('User ID not found in token');
+    }
+    
+    const userId = req.user.sub; // Use sub from JWT token as userId
+    return this.commentsService.createComment(
       createCommentDto.commentDetail,
       createCommentDto.postId,
-      createCommentDto.userId,
+      userId,
     );
   }
 
