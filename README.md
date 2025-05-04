@@ -52,19 +52,13 @@ curl -X POST http://localhost:3001/comments \
   }'
 ```
 
-## 7. การรันเทสต์
-```bash
-npm run test         # unit test
-npm run test:e2e     # end-to-end test
-npm run test:cov     # ดู coverage
-```
 
-## 8. ปัญหาที่พบบ่อย
+## 7. ปัญหาที่พบบ่อย
 - ถ้าเชื่อมต่อฐานข้อมูลไม่ได้ ให้เช็ค config และสิทธิ์ของ user ฐานข้อมูล
 - ถ้า JWT ไม่ถูกต้อง ให้เช็ค secret ใน `src/auth/constants.ts`
 - ถ้า API ตอบ 400/401 ให้เช็ค header และ body ที่ส่งไป
 
-## 9. ข้อมูลเพิ่มเติม
+## 8. ข้อมูลเพิ่มเติม
 - โค้ดนี้ใช้ [NestJS](https://nestjs.com/) (Node.js + TypeScript)
 - ถ้ามีปัญหา/ข้อสงสัย ติดต่อทีม dev หรือดูเอกสารในโฟลเดอร์นี้
 
