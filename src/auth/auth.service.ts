@@ -55,4 +55,12 @@ export class AuthService {
         access_token: jwt
     };
   }
+  
+  async getUserById(id: number): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    return user;
+  }
 }
