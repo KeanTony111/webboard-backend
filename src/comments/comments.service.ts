@@ -22,7 +22,6 @@ export class CommentsService {
   }
 	
 	async createComment(commentDetail: string, postId: number, userId: number): Promise<Comment> {
-		// validate that the post exists
 		const post = await this.postRepository.findOne({
 			where: { id: postId },
 			relations: ['user'], 

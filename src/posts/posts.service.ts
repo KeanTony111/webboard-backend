@@ -105,8 +105,15 @@ export class PostsService {
 			where,
 		};
 
-		const [posts, total] = await this.postRepository.findAndCount(options);
-		
-    return { posts, total };
+    // Count comments for each post
+    const [posts, total] = await this.postRepository.findAndCount(options);
+    const postsWithCommentCount = await Promise.all(
+      posts.map(async post => {
+        const commentCount = await this.postRepository.manager.count('Comment', { where: { postId: post.id } });
+        return { ...post, commentCount };
+      })
+    );
+
+    return { posts: postsWithCommentCount, total };
   }
 }
