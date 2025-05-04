@@ -62,4 +62,26 @@ curl -X POST http://localhost:3001/comments \
 - โค้ดนี้ใช้ [NestJS](https://nestjs.com/) (Node.js + TypeScript)
 - ถ้ามีปัญหา/ข้อสงสัย ติดต่อทีม dev หรือดูเอกสารในโฟลเดอร์นี้
 
+## ตารางสรุป API Endpoint
+
+| Endpoint | Header | Body | Response |
+|----------|--------|------|----------|
+| **POST /auth/signup** | Content-Type: application/json | `{ "username": string, "password": string }` | `{ "message": "Signup successful", "user": { ... } }` |
+| **POST /auth/signin** | Content-Type: application/json | `{ "username": string, "password": string }` | `{ "access_token": string, "user": { ... } }` (cookie set) |
+| **GET /posts** | (optional) Authorization: Bearer token | - | `[ { ...post } ]` (list of posts) |
+| **GET /posts/:id** | - | - | `{ ...post }` |
+| **POST /posts** | Content-Type: application/json<br>Authorization: Bearer token | `{ "title": string, "content": string, "communityId": number }` | `{ ...post }` |
+| **PUT /posts/:id** | Content-Type: application/json<br>Authorization: Bearer token | `{ "title"?: string, "content"?: string, "communityId"?: number }` | `{ ...post }` |
+| **DELETE /posts/:id** | Authorization: Bearer token | - | `{ "message": "Post deleted" }` |
+| **GET /comments/:postId** | - | - | `[ { ...comment } ]` |
+| **POST /comments** | Content-Type: application/json<br>Authorization: Bearer token | `{ "commentDetail": string, "postId": number }` | `{ ...comment }` |
+| **GET /communities** | - | - | `[ { ...community } ]` |
+| **POST /communities** | Content-Type: application/json<br>Authorization: Bearer token | `{ "name": string, "description": string }` | `{ ...community }` |
+| **GET /search?query=...** | - | - | `[ { ...post } ]` |
+
+**หมายเหตุ:**
+- ทุก endpoint ที่ต้องการ auth ให้ส่ง header `Authorization: Bearer <token>`
+- Response อาจมีโครงสร้างเพิ่มเติมตาม entity (ดูในโค้ดแต่ละ controller)
+- สามารถดูรายละเอียด field เพิ่มเติมในแต่ละ entity หรือ controller ได้ในโฟลเดอร์ `src/`
+
 ---
